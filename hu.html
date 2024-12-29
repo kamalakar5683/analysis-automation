@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Dashboard</title>
+
+    <!-- JavaScript and CSS files inline -->
+    <script src="https://cdn.plotly.com/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #upload-container {
+            margin-top: 20px;
+        }
+
+        canvas {
+            width: 50%;
+            height: 30vh;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="upload-container">
+        <input type="file" id="json-file" accept=".json">
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <canvas id="bar-chart"></canvas>
+        </div>
+        <div class="col-sm-6">
+            <canvas id="line-chart"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <canvas id="scatter-chart"></canvas>
+        </div>
+        <div class="col-sm-6">
+            <canvas id="pie-chart"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <canvas id="heatmap-chart"></canvas>
+        </div>
+    </div>
+
+    <!-- JavaScript code inline -->
+    <script>
+        let data = [];
+        let layout;
+
+        // Upload JSON file
+        const jsonFileInput = document.getElementById('json-file');
+        jsonFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                data = JSON.parse(reader.result);
+                updateDashboard(data);
+            };
+            reader.readAsText(file);
+        });
+
+        // Update dashboard
+        function updateDashboard(data) {
+            layout = {
+                title: 'Performance Dashboard',
+                xaxis: {title: 'Month'},
+                yaxis: {}
+            };
+
+            // Bar chart
+            const barData = data.map((item, i) => ({ month: item.month, value: item.barValue }));
+            const barLayout = {
+                title: 'Bar Chart',
+                xaxis: layout.xaxis,
+                yaxis: {title: 'Value'},
+                x: barData.map((d, i) => ({value: d.month, label: d.month})),
+                type: 'bar'
+            };
+            document.getElementById('bar-chart').innerHTML = '<plotlyPlot data=' + JSON.stringify(barData) + ' layout=' + JSON.stringify(barLayout) + '</plotlyPlot>';
+
+            // Line chart
+            const lineData = data.map((item, i) => ({ month: item.month, value: item.lineValue }));
+            const lineLayout = {
+                title: 'Line Chart',
+                xaxis: layout.xaxis,
+                yaxis: {title: 'Value'},
+                type: 'line',
+                mode: 'lines+markers'
+            };
+            document.getElementById('line-chart').innerHTML = '<plotlyPlot data=' + JSON.stringify(lineData) + ' layout=' + JSON.stringify(lineLayout) + '</plotlyPlot>';
+
+            // Scatter chart
+            const scatterData = data.map((item, i) => ({ month: item.month, value1: item.scatterValue1, value2: item.scatterValue2 }));
+            const scatterLayout = {
+                title: 'Scatter Chart',
+                xaxis: layout.xaxis,
+                yaxis: {title: 'Y1'},
+                type: 'scatter'
+            };
+            document.getElementById('scatter-chart').innerHTML = '<plotlyPlot data=' + JSON.stringify(scatterData) + ' layout=' + JSON.stringify(scatterLayout) + '</plotlyPlot>';
+
+            // Pie chart
+            const pieData = data.map((item, i) => ({ name: item.name, value: item.value }));
+            const pieLayout = {
+                title: 'Pie Chart',
+                xaxis: {title: 'Name'},
+                yaxis: {title: 'Value'}
+            };
+            document.getElementById('pie-chart').innerHTML = '<plotlyPlot data=' + JSON.stringify(pieData) + ' layout=' + JSON.stringify(pieLayout) + '</plotlyPlot>';
+
+            // Heatmap chart
+            const heatmapData = [];
+            for (let i = 0; i < data.length; i++) {
+                for (let j = 0; j < data[i].matrix.length; j++) {
+                    heatmapData.push({ x: i, y: j, value: data[i].matrix[j] });
+                }
+            }
+            const heatmapLayout = {
+                title: 'Heatmap Chart',
+                xaxis: {title: 'X'},
+                yaxis: {title: 'Y'}
+            };
+            document.getElementById('heatmap-chart').innerHTML = '<plotlyPlot data=' + JSON.stringify(heatmapData) + ' layout=' + JSON.stringify(heatmapLayout) + '</plotlyPlot>';
+        }
+    </script>
+</body>
+</html>

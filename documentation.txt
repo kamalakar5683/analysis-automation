@@ -1,0 +1,26 @@
+chocolate for pip
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+choco install python --version=3.10.12
+error :: choco search python
+choco install python --version=3.10
+python --version
+………………………………………………………………….
+
+python --version
+
+Open Control Panel > System and Security > System.
+Click Advanced system settings on the left.
+In the System Properties window, click the Environment Variables button.
+In the System variables section, scroll down and select the Path variable, then click Edit.
+In the Edit Environment Variable window, click New and add the following path:
+plaintext
+Copy code
+C:\ProgramData\chocolatey\bin
+pip install transformers langchain streamlit torch
+>python -m pip install --upgrade pip
+pip install urllib3
+python get-pip.py
+python -m pip install --upgrade --user pip
+>pip install transformers langchain streamlit torch
+pip install langchain-ollama
